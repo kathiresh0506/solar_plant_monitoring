@@ -71,7 +71,26 @@ def get_gpt_analysis(image_path, cv_results):
         with open(image_path, "rb") as image_file:
             base64_image = base64.b64encode(image_file.read()).decode('utf-8')
         
-        prompt = f"""Analyze this solar construction site. Computer vision detected: {cv_results['stage']} stage, {cv_results['progress']}% progress, {cv_results['panel_count']} panels. Provide professional construction assessment with specific observations and recommendations."""
+        prompt = f"""You are an expert solar plant construction analyst. Analyze this construction site image in detail.
+
+Computer Vision Analysis:
+- Construction Stage: {cv_results['stage']}
+- Progress: {cv_results['progress']}%
+- Panel Count: {cv_results['panel_count']}
+- Edge Density: {cv_results['edge_density']} (structural complexity)
+- Blue/Metallic Ratio: {cv_results['blue_ratio']} (panel surfaces)
+- Brightness: {cv_results['brightness']}
+
+Provide detailed analysis including:
+1. Current construction progress assessment
+2. Specific observations about what you see in the image
+3. Quality and safety evaluation
+4. At least 5 specific recommendations for next steps
+5. Potential issues or risks identified
+6. Timeline estimation for completion
+7. Best practices suggestions
+
+Be comprehensive and professional - this is for construction management decision making."""
 
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -81,7 +100,7 @@ def get_gpt_analysis(image_path, cv_results):
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
                 ]}
             ],
-            max_tokens=500
+            max_tokens=1200
         )
         
         return response.choices[0].message.content
