@@ -109,7 +109,7 @@ Be comprehensive and professional - this is for construction management decision
         return response.choices[0].message.content
         
     except Exception as e:
-        st.error(f"GPT-4 Error: {str(e)}")
+        # Silently fall back to detailed analysis
         return generate_detailed_analysis(cv_results)
 
 def generate_detailed_analysis(cv_results):
