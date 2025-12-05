@@ -565,12 +565,27 @@ elif page == "📋 AI Generated Reports":
                     pdf.multi_cell(0, 6, summary)
                     pdf.ln(5)
                     
-                    # AI Insights Section
+                    # AI Insights Section - Full Analysis
+                    pdf.add_page()  # New page for full analysis
                     pdf.set_font("Helvetica", "B", 14)
-                    pdf.cell(0, 10, "GPT-4 AI Analysis", ln=True)
+                    pdf.cell(0, 10, "Complete GPT-4 AI Analysis", ln=True)
+                    pdf.ln(5)
                     
-                    pdf.set_font("Helvetica", "", 10)
-                    pdf.multi_cell(0, 6, ai_insights[:500])  # Limit length
+                    pdf.set_font("Helvetica", "", 9)
+                    # Split analysis into chunks to fit properly
+                    analysis_text = ai_insights.replace('**', '').replace('*', '')  # Remove markdown
+                    
+                    # Split by sections and add each
+                    sections = analysis_text.split('\n\n')
+                    for section in sections:
+                        if section.strip():
+                            # Handle long sections
+                            lines = section.split('\n')
+                            for line in lines:
+                                if line.strip():
+                                    pdf.multi_cell(0, 5, line.strip())
+                            pdf.ln(3)
+                    
                     pdf.ln(5)
                     
                     # Technical Metrics
